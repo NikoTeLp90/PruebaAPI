@@ -76,47 +76,52 @@ def eliminar_usuario(pk):
         db.session.delete(usuario)
         db.session.commit()
         
-        if request.accept_mimetypes.accept_json:
-            return jsonify({'Mensaje':'Usuario eliminado con éxito'}),201
-        else:      
-            return redirect(url_for('usuarios.obtener_usuarios'))
+
+        return jsonify({'Mensaje':'Usuario eliminado con éxito'}),201
     
     except SQLAlchemyError as e:
         db.session.rollback()
         error_msg = str(e)
         
-        if request.accept_mimetypes.accept_json:
-            return jsonify({"error":error_msg}), 500
-        else:
-            return render_template("usuarios/lista_usuarios.html", error = error_msg)
+        return jsonify({"error":error_msg}), 500
+
 
 @usuarios_bp.route("/editar/<int:pk>", methods=['POST'])
 def editar_usuario(pk):
     usuario = Usuario.query.get_or_404(pk)
 
-    nombre = request.form.get('nombre')
-    apellido = request.form.get('apellido')
-    email = request.form.get('email')
-    password = request.form.get('password')
-
-    if not nombre or not email:
-        error_msg = "Nombre y email son obligatorios"
-        
-        return render_template("usuarios/editar_usuario.html", usuario=usuario, error=error_msg)
-    
+    data = request.get_json()
+    nombre = data.get('nombre')
+    apellido = data.get('apellido')
+    email = data.get('email')
+    password = data.get('password')
+   
     try:
-        usuario.nombre = nombre
-        usuario.apellido = apellido
-        usuario.email = email
-
+        if nombre:
+            usuario.nombre = nombre
+        if apellido:
+            usuario.apellido = apellido
+        if email:
+            usuario.email = email
         if password:
             usuario.set_password(password)
 
         db.session.commit()
-        return redirect(url_for('usuarios.obtener_usuarios'))
+
+        return jsonify({
+            "success": True,
+            "message": "Usuario actualizado correctamente.",
+            "usuario": {
+                "id": usuario.id,
+                "nombre": usuario.nombre,
+                "apellido": usuario.apellido,
+                "email": usuario.email
+            }
+        }), 200
 
     except SQLAlchemyError as e:
         db.session.rollback()
-        error_msg = str(e)
-
-        return render_template("usuarios/editar_usuario.html", usuario=usuario, error=error_msg)
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
