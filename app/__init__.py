@@ -17,7 +17,7 @@ def create_app():
     #     'remota': 'postgresql://usuario:clave@host:puerto/dbname'  # reemplazá por tus datos reales
     # }
     
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     # crear_base(app)
     
