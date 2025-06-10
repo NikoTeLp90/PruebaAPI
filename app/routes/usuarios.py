@@ -72,6 +72,7 @@ def obtener_usuarios():
         return jsonify({'error': str(e)}), 500
 
 @usuarios_bp.route("/eliminar/<int:pk>", methods = ['POST'])
+@jwt_required()
 def eliminar_usuario(pk):
     
     try:
@@ -90,6 +91,7 @@ def eliminar_usuario(pk):
 
 
 @usuarios_bp.route("/editar/<int:pk>", methods=['POST'])
+@jwt_required()
 def editar_usuario(pk):
     usuario = Usuario.query.get_or_404(pk)
 
