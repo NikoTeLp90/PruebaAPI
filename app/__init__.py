@@ -23,6 +23,7 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     #SEGURIDAD DE LA APP
+    app.config['JWT_ALGORITHM'] = "HS256"
     app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY')
     
     jwt = JWTManager(app)
