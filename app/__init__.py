@@ -10,6 +10,7 @@ import os
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
 
     
     ### -- Utilización de base local y base remota a la vez -- ###
@@ -33,7 +34,7 @@ def create_app():
     #crear_base(app)
     
     #COMANDOS DE LA BASE
-    CORS(app)
+    
     db.init_app(app)
     migrate = Migrate(app, db)
     

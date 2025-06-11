@@ -1,12 +1,19 @@
 from flask import request, jsonify, Blueprint
 from flask_jwt_extended import create_access_token
-from app.models.usuario_model import *
+from app.models.usuario_model import Usuario
 from datetime import timedelta
+from flask_cors import cross_origin
 
+login_bp = Blueprint('login', __name__)
 
-login_bp = Blueprint('login', __name__, url_prefix='/login')
-@login_bp.route('/', methods=['POST'])
+@login_bp.route('/login', methods=['POST', 'OPTIONS'])
+@cross_origin(supports_credentials=True)
 def login():
+    if request.method == 'OPTIONS':
+        # Responder al preflight request correctamente
+        return '', 200
+
+    # Manejar el POST para login
     data = request.get_json()
     email = data.get("email")
     password = data.get("password")
