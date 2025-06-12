@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, render_template, redirect, url_for
 from app.models.usuario_model import *
 from sqlalchemy.exc import SQLAlchemyError
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt
 
 #Blueprint, todo lo que tenga prefijo usuarios_bp la ruta va a ser /usuarios
 usuarios_bp = Blueprint('usuarios', __name__, url_prefix='/usuarios')
@@ -12,6 +12,9 @@ usuarios_bp = Blueprint('usuarios', __name__, url_prefix='/usuarios')
 @usuarios_bp.route("/", methods = ['POST'])
 @jwt_required()
 def crear_usuario():
+    claims = get_jwt()
+    if claims['rol'] != 'admin':
+        return jsonify({"msg": "No autorizado"}), 403
     
     data = request.get_json()
     nombre = data.get('nombre')

@@ -26,7 +26,10 @@ def login():
     if not usuario or not usuario.check_password(password):
         return jsonify({"success": False, "message": "Credenciales inválidas"}), 401
 
-    access_token = create_access_token(identity=str(usuario.id), expires_delta=timedelta(hours=1))
+    access_token = create_access_token(identity=str(usuario.id), 
+                                       additional_claims={"rol": usuario.rol}, 
+                                       expires_delta=timedelta(hours=1)
+                                       )
 
     return jsonify({
         "success": True,
