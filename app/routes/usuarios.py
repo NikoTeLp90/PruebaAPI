@@ -18,6 +18,7 @@ def crear_usuario():
     apellido = data.get('apellido')
     email = data.get('email')
     password = data.get('password')
+    rol = data.get('rol')
   
     if not nombre or not email or not password:
         error_msg = "Faltan nombre, email o contraseña"
@@ -27,7 +28,7 @@ def crear_usuario():
         
     
     try:
-        nuevo_usuario = Usuario(nombre=nombre,apellido=apellido,email=email)
+        nuevo_usuario = Usuario(nombre=nombre,apellido=apellido,email=email,rol=rol)
         nuevo_usuario.set_password(password)
         db.session.add(nuevo_usuario)
         db.session.commit()
@@ -38,7 +39,8 @@ def crear_usuario():
                 'id': nuevo_usuario.id,
                 'nombre': nuevo_usuario.nombre,
                 'apellido': nuevo_usuario.apellido,
-                'email': nuevo_usuario.email
+                'email': nuevo_usuario.email,
+                'rol': nuevo_usuario.rol
             }
         }), 201
     
@@ -63,7 +65,8 @@ def obtener_usuarios():
             'id': u.id,
             'nombre': u.nombre,
             'apellido': u.apellido,
-            'email': u.email
+            'email': u.email,
+            'rol': u.rol
         } for u in usuarios]
 
         return jsonify(usuarios_json), 200
@@ -100,6 +103,7 @@ def editar_usuario(pk):
     apellido = data.get('apellido')
     email = data.get('email')
     password = data.get('password')
+    rol = data.get('rol')
    
     try:
         if nombre:
@@ -110,6 +114,8 @@ def editar_usuario(pk):
             usuario.email = email
         if password:
             usuario.set_password(password)
+        if rol:
+            usuario.rol = rol
 
         db.session.commit()
 
@@ -120,7 +126,8 @@ def editar_usuario(pk):
                 "id": usuario.id,
                 "nombre": usuario.nombre,
                 "apellido": usuario.apellido,
-                "email": usuario.email
+                "email": usuario.email,
+                "rol": usuario.rol
             }
         }), 200
 

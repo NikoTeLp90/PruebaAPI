@@ -14,6 +14,7 @@ class Usuario(db.Model):
     apellido = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True)
     pw_hash = db.Column(db.String(256), nullable = False)
+    rol = db.Column(db.String(50), nullable = False)
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     modified_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate = datetime.utcnow)
