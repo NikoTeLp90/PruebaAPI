@@ -28,8 +28,6 @@ def crear_usuario():
 
         return jsonify({'error': error_msg}), 400
 
-        
-    
     try:
         nuevo_usuario = Usuario(nombre=nombre,apellido=apellido,email=email,rol=rol)
         nuevo_usuario.set_password(password)
@@ -57,6 +55,10 @@ def crear_usuario():
 @usuarios_bp.route("/", methods = ['GET'])
 @jwt_required()
 def obtener_usuarios():
+    claims = get_jwt()
+    if claims['rol'] != 'admin':
+        return jsonify({"msg": "No autorizado"}), 403
+    
     try:
         q = request.args.get('q', '')
         usuarios = Usuario.query.all()
@@ -80,6 +82,9 @@ def obtener_usuarios():
 @usuarios_bp.route("/eliminar/<int:pk>", methods = ['POST'])
 @jwt_required()
 def eliminar_usuario(pk):
+    claims = get_jwt()
+    if claims['rol'] != 'admin':
+        return jsonify({"msg": "No autorizado"}), 403
     
     try:
         usuario = Usuario.query.get_or_404(pk)
@@ -99,6 +104,11 @@ def eliminar_usuario(pk):
 @usuarios_bp.route("/editar/<int:pk>", methods=['POST'])
 @jwt_required()
 def editar_usuario(pk):
+    
+    claims = get_jwt()
+    if claims['rol'] != 'admin':
+        return jsonify({"msg": "No autorizado"}), 403
+    
     usuario = Usuario.query.get_or_404(pk)
 
     data = request.get_json()
