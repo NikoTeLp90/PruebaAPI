@@ -4,9 +4,9 @@ from app.models.usuario_model import Usuario
 from datetime import timedelta
 from flask_cors import cross_origin
 
-login_bp = Blueprint('login', __name__)
+auth_bp = Blueprint('auth', __name__)
 
-@login_bp.route('/login', methods=['POST', 'OPTIONS'])
+@auth_bp.route('/login', methods=['POST', 'OPTIONS'])
 @cross_origin(supports_credentials=True)
 def login():
     if request.method == 'OPTIONS':
@@ -36,3 +36,9 @@ def login():
         "message": "Inicio de sesión exitoso",
         "access_token": access_token
     }), 200
+
+@auth_bp.route('/logout' , methods=['POST'])
+def logout():
+    response = jsonify({"message": "Logout exitoso"})
+    response.set_cookie('access_token', '', expires=0)
+    return response
