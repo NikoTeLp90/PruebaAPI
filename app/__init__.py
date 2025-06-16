@@ -1,7 +1,7 @@
 from flask import Flask
 from .database import db
 from .routes.usuarios import usuarios_bp
-from .routes.login import login_bp
+from .routes.auth import auth_bp
 from flask_migrate import Migrate
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -41,6 +41,6 @@ def create_app():
     
     #BLUEPRINTS, REGISTRAR LOS BLUEPRINTS
     app.register_blueprint(usuarios_bp)
-    app.register_blueprint(login_bp)
+    app.register_blueprint(auth_bp)
     
     return app
